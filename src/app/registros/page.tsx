@@ -21,6 +21,8 @@ export default function PageRegistros() {
   return (
     <main className='flex min-h-screen flex-col items-center p-24'>
       <h1>Registros</h1>
+
+      
       
       <div className="flex flex-col bg-gray-500 ">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8 ">

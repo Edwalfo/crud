@@ -45,6 +45,8 @@ class UserAPI {
       method: "DELETE",
     });
   };
+
+  
 }
 
 export default UserAPI;
