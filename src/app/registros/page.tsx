@@ -1,3 +1,6 @@
+/**
+ * Componente de página para mostrar registros de usuarios.
+ */
 "use client";
 
 import { useEffect, useState } from "react";

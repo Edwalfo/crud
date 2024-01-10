@@ -1,10 +1,31 @@
+/**
+ * Props for the LoginForm component.
+ */
 interface LoginFormProps {
+  /**
+   * Function to handle the login action.
+   */
   onLogin: () => void;
+  /**
+   * Function to handle input change.
+   * @param event - The change event object.
+   */
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  /**
+   * Object containing the email and password for the new login.
+   */
   newLogin: { email: string; password: string };
+  /**
+   * Message to display for any login errors.
+   */
   message: string;
 }
 
+/**
+ * A form component for user login.
+ * @param props - The props for the LoginForm component.
+ * @returns The rendered LoginForm component.
+ */
 export default function LoginForm({
   onLogin,
   onChange,
