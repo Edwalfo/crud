@@ -1,68 +1,66 @@
-/**
- * Página de inicio de sesión.
- */
+// LoginPage.tsx
 "use client";
 import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import LoginForm from "../component/form/LoginForm";
 import Spinner from "../component/Spinner";
 import useAuth from "../hooks/useAuth";
+import { useAuthContext } from "../contexts/AuthContext";
 
-/**
- * Interfaz para representar los datos de inicio de sesión.
- */
+
 interface Login {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
-/**
- * Componente de la página de inicio de sesión.
- */
 export default function LoginPage() {
-    const [newLogin, setNewLogin] = useState<Login>({ email: "", password: "" });
-    const [message, setMessage] = useState<string>("");
-    const { authenticate, loading } = useAuth();
-    const router = useRouter();
+  const [newLogin, setNewLogin] = useState<Login>({ email: "", password: "" });
+  const [message, setMessage] = useState<string>("");
+  const { authenticate, loading } = useAuth();
+  const router = useRouter();
+  const { setIsAuthenticated} = useAuthContext();
+  
 
-    /**
-     * Maneja la autenticación del usuario.
-     */
-    const handleAuthentication = async () => {
-        if (newLogin.email === "" || newLogin.password === "") {
-            setMessage("Por favor ingrese sus credenciales");
-            return;
-        }
 
-        const isAuthenticated = await authenticate(newLogin);
+  const validateCredentials = () => {
+    if (newLogin.email === "" || newLogin.password === "") {
+      setMessage("Por favor ingrese sus credenciales");
+      return false;
+    }
+    return true;
+  };
 
-        if (isAuthenticated) {
-            router.push("/registros");
-        } else {
-            setMessage("Credenciales incorrectas");
-        }
-    };
+  const handleAuthentication = async () => {
+    if (!validateCredentials()) return;
 
-    /**
-     * Maneja el cambio en los campos de entrada.
-     * @param e El evento de cambio.
-     */
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setNewLogin((prev) => ({ ...prev, [name]: value }));
-    };
+    const isAuthenticated = await authenticate(newLogin);
 
-    return (
-        <main>
-            <div className="container mx-auto flex justify-center items-center h-screen">
-                {loading && <Spinner />}
-                <LoginForm
-                    onLogin={handleAuthentication}
-                    onChange={handleInputChange}
-                    newLogin={newLogin}
-                    message={message}
-                />
-            </div>
-        </main>
-    );
+    if (isAuthenticated) {
+      setIsAuthenticated(true);
+      console.log("isAuthenticated", isAuthenticated);
+      
+      router.push("/registros");
+    } else {
+      setMessage("Credenciales incorrectas");
+    }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewLogin((prev) => ({ ...prev, [name]: value }));
+  };
+
+  return (
+    <main>
+      <div className="container mx-auto flex justify-center items-center h-screen">
+        {loading && <Spinner />}
+        <LoginForm
+          onLogin={handleAuthentication}
+          onChange={handleInputChange}
+          newLogin={newLogin}
+          message={message}
+        />
+      </div>
+    </main>
+  );
 }
